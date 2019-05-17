@@ -15,7 +15,8 @@ public class GraphView extends View {
     private static final int DW = 5;
 
     private int ndata = NDATA_INIT;
-    private float[] data = new float[NDATA_INIT];
+    private float[] data1 = new float[NDATA_INIT];
+    private float[] data2 = new float[NDATA_INIT];
     private int index = 0;
     private int x0, y0;
 
@@ -45,9 +46,10 @@ public class GraphView extends View {
         internalWidth = (w / DW) * DW;
         // data size
         ndata = (internalWidth / DW) + 1;
-        if (ndata > data.length) {
+        if (ndata > data1.length) {
             index = 0;
-            data = new float[ndata];
+            data1 = new float[ndata];
+            data2 = new float[ndata];
         }
 
         // original point, width, height
@@ -88,14 +90,24 @@ public class GraphView extends View {
             int j = (index + i) % ndata;
             int x1 = x0 + DW * i;
             int x2 = x0 + DW * (i + 1);
-            int y1 = (int) (y0 + dh * data[j]);
-            int y2 = (int) (y0 + dh * data[(j + 1) % ndata]);
+            int y1 = (int) (y0 + dh * data1[j]);
+            int y2 = (int) (y0 + dh * data1[(j + 1) % ndata]);
+            canvas.drawLine(x1, y1, x2, y2, paint);
+        }
+        paint.setColor(Color.RED);
+        for (int i = 0; i < ndata - 1; i++) {
+            int j = (index + i) % ndata;
+            int x1 = x0 + DW * i;
+            int x2 = x0 + DW * (i + 1);
+            int y1 = (int) (y0 + dh * data2[j]);
+            int y2 = (int) (y0 + dh * data2[(j + 1) % ndata]);
             canvas.drawLine(x1, y1, x2, y2, paint);
         }
     }
 
-    public void addData(float val) {
-        data[index] = val;
+    public void addData(float val1, float val2) {
+        data1[index] = val1;
+        data2[index] = val2;
         index = (index + 1) % ndata;
         invalidate();
     }

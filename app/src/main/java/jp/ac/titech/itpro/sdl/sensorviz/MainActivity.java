@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         DELAYS.add(SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    private static final float ALPHA = 0.75f;
+
     private TextView typeView;
     private TextView infoView;
     private GraphView xView, yView, zView;
@@ -41,7 +43,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private final Handler handler = new Handler();
     private final Timer timer = new Timer();
 
+    private float rx, ry, rz;
     private float vx, vy, vz;
+
     private int rate;
     private int accuracy;
     private long prev_ts;
@@ -91,9 +95,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void run() {
         infoView.setText(getString(R.string.info_format, accuracy, rate));
-        xView.addData(vx);
-        yView.addData(vy);
-        zView.addData(vz);
+        xView.addData(rx, vx);
+        yView.addData(ry, vy);
+        zView.addData(rz, vz);
     }
 
     @Override
@@ -171,9 +175,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        vx = event.values[0];
-        vy = event.values[1];
-        vz = event.values[2];
+        rx = event.values[0];
+        ry = event.values[1];
+        rz = event.values[2];
+        vx = ALPHA * vx + (1 - ALPHA) * rx;
+        vy = ALPHA * vy + (1 - ALPHA) * ry;
+        vz = ALPHA * vz + (1 - ALPHA) * rz;
         long ts = event.timestamp;
         rate = (int) (ts - prev_ts) / 1000;
         prev_ts = ts;
