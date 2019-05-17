@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private int rate;
     private int accuracy;
-    private long prev_ts;
+    private long prevTimestamp;
 
     private int delay = SensorManager.SENSOR_DELAY_NORMAL;
     private int type = Sensor.TYPE_ACCELEROMETER;
@@ -178,12 +178,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         rx = event.values[0];
         ry = event.values[1];
         rz = event.values[2];
+
         vx = ALPHA * vx + (1 - ALPHA) * rx;
         vy = ALPHA * vy + (1 - ALPHA) * ry;
         vz = ALPHA * vz + (1 - ALPHA) * rz;
         long ts = event.timestamp;
-        rate = (int) (ts - prev_ts) / 1000;
-        prev_ts = ts;
+        rate = (int) (ts - prevTimestamp) / 1000;
+        prevTimestamp = ts;
     }
 
     @Override
