@@ -178,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         rx = event.values[0];
         ry = event.values[1];
         rz = event.values[2];
+        Log.i(TAG, "x=" + rx + ", y=" + ry + ", z=" + rz);
 
         vx = ALPHA * vx + (1 - ALPHA) * rx;
         vy = ALPHA * vy + (1 - ALPHA) * ry;
